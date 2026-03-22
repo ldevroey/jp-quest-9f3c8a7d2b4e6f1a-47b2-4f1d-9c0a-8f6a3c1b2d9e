@@ -3,57 +3,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Étape du jeu – Japon</title>
+<title>Étape du jeu</title>
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
+html, body { height: 100%; margin: 0; }
+:root { --bgimg: url("assets/bg/mosaic_3x3_maxsquare.jpg"); }
+
+body {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #fff;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--bgimg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(18px) grayscale(70%) brightness(0.70);
+  transform: scale(1.08);
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: -1;
+}
+
+.fg {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fg img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  object-position: center;
+  max-width: 1400px;
+  max-height: 900px;
+  filter: saturate(0.98) contrast(1.02);
 }
-body {
+
+.ui {
+  position: relative;
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  padding: 24px;
+}
+
+.panel {
+  width: min(520px, 92vw);
+  background: rgba(0,0,0,0.72);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 22px 20px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+h1 { margin: 0 0 10px 0; font-size: 22px; font-weight: 700; }
+.p { margin: 6px 0; font-size: 14px; opacity: 0.92; line-height: 1.35; }
+
+.lock {
   display: flex;
   justify-content: center;
-  align-items: center;
-  font-family: system-ui, sans-serif;
+  gap: 10px;
+  margin: 18px 0 14px 0;
 }
-.container {
-  background: rgba(0,0,0,0.75);
-  color: white;
-  padding: 2rem;
-  border-radius: 16px;
-  text-align: center;
-  max-width: 420px;
+
+.wheel {
+  width: 54px;
+  height: 78px;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.20);
+  background: rgba(10,10,10,0.75);
+  font-size: 34px;
+  line-height: 78px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.wheel:active { transform: scale(0.98); }
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primary { background: #c62828; color: #fff; }
+.secondary { background: rgba(255,255,255,0.10); color: #fff; border: 1px solid rgba(255,255,255,0.18); }
+
+#result { margin-top: 12px; font-weight: 700; }
+.success { color: #4caf50; }
+.error { color: #ff5252; }
+
+.hint { margin-top: 12px; font-size: 12px; opacity: 0.75; }
+
+.hidden-input {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 </style>
-
-<style>
-body {
-  background:
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    url("https://source.unsplash.com/1200x1200/?tokyo"),
-    url("https://source.unsplash.com/1200x1200/?mount+fuji"),
-    url("https://source.unsplash.com/1200x1200/?kyoto"),
-    url("https://source.unsplash.com/1200x1200/?miyajima,torii"),
-    url("https://source.unsplash.com/1200x1200/?nagoya,maglev,museum"),
-    url("https://source.unsplash.com/1200x1200/?tokyo,disneysea"),
-    url("https://source.unsplash.com/1200x1200/?sapporo"),
-    url("https://source.unsplash.com/1200x1200/?otaru,canal"),
-    url("https://source.unsplash.com/1200x1200/?lake+toya");
-  background-size: 33.333% 33.333%;
-  background-position:
-    0% 0%, 33.333% 0%, 66.666% 0%,
-    0% 33.333%, 33.333% 33.333%, 66.666% 33.333%,
-    0% 66.666%, 33.333% 66.666%, 66.666% 66.666%;
-}
-</style>
-
 </head>
 <body>
-  <div class="container">
-    <h1>🎌 Bravo</h1>
-    <p>Vous êtes arrivés à l’avant-dernière étape du jeu.</p>
-    <p>Entrez le code secret pour continuer.</p>
+
+<div class="fg">
+  <img src="assets/bg/mosaic_3x3_maxsquare.jpg" alt="Fond mosaïque">
+</div>
+
+<div class="ui">
+  <div class="panel">
+    <h1>Bravo</h1>
+    <div class="p">Vous êtes arrivés à l’avant-dernière étape du jeu</div>
+    <div class="p">Entrez le code secret pour continuer</div>
+
+    <input class="hidden-input" id="kbd" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="one-time-code">
+
+    <div class="lock" id="lock">
+      <div class="wheel" data-i="0">0</div>
+      <div class="wheel" data-i="1">0</div>
+      <div class="wheel" data-i="2">0</div>
+      <div class="wheel" data-i="3">0</div>
+      <div class="wheel" data-i="4">0</div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="validate">Valider</button>
+      <button class="secondary" id="reset">Réinitialiser</button>
+    </div>
+
+    <div id="result"></div>
+    <div class="hint">Cliquer sur une roue pour incrémenter. Molette souris pour décrémenter. Saisie clavier possible.</div>
   </div>
+</div>
+
+<script>
+const CODE = "12345";
+const wheels = Array.from(document.querySelectorAll('.wheel'));
+const result = document.getElementById('result');
+const kbd = document.getElementById('kbd');
+
+function getValue() {
+  return wheels.map(w => w.textContent).join('');
+}
+
+function setValue(s) {
+  const v = (s || "").replace(/\D/g,'').slice(0,5).padEnd(5,'0');
+  for (let i=0;i<5;i++) wheels[i].textContent = v[i];
+}
+
+function show(ok) {
+  if (ok) {
+    result.textContent = "Code correct";
+    result.className = "success";
+  } else {
+    result.textContent = "Code incorrect";
+    result.className = "error";
+  }
+}
+
+function validate() {
+  show(getValue() === CODE);
+}
+
+wheels.forEach(w => {
+  w.addEventListener('click', () => {
+    const v = (parseInt(w.textContent,10)+1)%10;
+    w.textContent = String(v);
+    validate();
+  });
+  w.addEventListener('wheel', e => {
+    e.preventDefault();
+    const cur = parseInt(w.textContent,10);
+    const v = (cur + (e.deltaY < 0 ? 1 : 9)) % 10;
+    w.textContent = String(v);
+    validate();
+  }, { passive: false });
+});
+
+document.getElementById('validate').addEventListener('click', validate);
+
+document.getElementById('reset').addEventListener('click', () => {
+  setValue('00000');
+  result.textContent = "";
+  result.className = "";
+});
+
+document.getElementById('lock').addEventListener('click', () => kbd.focus());
+
+kbd.addEventListener('input', () => {
+  setValue(kbd.value);
+  validate();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    setValue('00000');
+    result.textContent = "";
+    result.className = "";
+  }
+});
+</script>
+
 </body>
 </html>
