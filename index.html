@@ -3,167 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dernière énigme</title>
-
+<title>Étape du jeu – Japon</title>
 <style>
-/* --- RESET --- */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* --- FOND --- */
-body {
-  height: 100vh;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  color: #fff;
-  background: 
-    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-    url("https://images.unsplash.com/photo-1549692520-acc6669e2f0c") center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* --- CONTENEUR --- */
-.container {
-  background: rgba(20,20,20,0.85);
-  padding: 2.5rem;
-  border-radius: 16px;
-  max-width: 420px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
-}
-
-/* --- TITRES --- */
-h1 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  opacity: 0.85;
-  margin-bottom: 2rem;
-}
-
-/* --- ROUES --- */
-.lock {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1.8rem;
-}
-
-.wheel {
-  width: 56px;
-  height: 80px;
-  background: #111;
-  border-radius: 10px;
-  border: 2px solid #444;
-  font-size: 2.2rem;
-  line-height: 80px;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.2s, transform 0.1s;
-}
-
-.wheel:hover {
-  background: #1e1e1e;
-}
-
-.wheel:active {
-  transform: scale(0.95);
-}
-
-/* --- BOUTON --- */
-button {
+html, body {
+  margin: 0;
+  padding: 0;
   width: 100%;
-  padding: 0.9rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: #c62828;
+  height: 100%;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: system-ui, sans-serif;
+}
+.container {
+  background: rgba(0,0,0,0.75);
   color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #b71c1c;
-}
-
-/* --- MESSAGE --- */
-#result {
-  margin-top: 1.2rem;
-  font-weight: bold;
-}
-.success { color: #4caf50; }
-.error { color: #ff5252; }
-
-.footer {
-  margin-top: 2rem;
-  font-size: 0.8rem;
-  opacity: 0.6;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 420px;
 }
 </style>
-</head>
 
-<body>
-
-<div class="container">
-  <h1>🎌 Félicitations</h1>
-  <div class="subtitle">
-    Vous êtes arrivés à l’avant‑dernière étape du jeu.<br>
-    Entrez le code secret pour continuer.
-  </div>
-
-  <div class="lock">
-    <div class="wheel">0</div>
-    <div class="wheel">0</div>
-    <div class="wheel">0</div>
-    <div class="wheel">0</div>
-    <div class="wheel">0</div>
-  </div>
-
-  <button onclick="checkCode()">Valider</button>
-
-  <div id="result"></div>
-
-  <div class="footer">最終試練 • Saishū shiren</div>
-</div>
-
-<script>
-/* === CONFIGURATION === */
-const CORRECT_CODE = "31415"; // <-- À MODIFIER
-
-/* === LOGIQUE === */
-const wheels = document.querySelectorAll(".wheel");
-
-wheels.forEach(wheel => {
-  wheel.addEventListener("click", () => {
-    let value = parseInt(wheel.textContent);
-    wheel.textContent = (value + 1) % 10;
-  });
-
-  wheel.addEventListener("wheel", e => {
-    e.preventDefault();
-    let value = parseInt(wheel.textContent);
-    wheel.textContent = (value + (e.deltaY < 0 ? 1 : 9)) % 10;
-  });
-});
-
-function checkCode() {
-  let entered = "";
-  wheels.forEach(w => entered += w.textContent);
-
-  const result = document.getElementById("result");
-
-  if (entered === CORRECT_CODE) {
-    result.textContent = "✅ Code correct. La dernière épreuve vous attend…";
-    result.className = "success";
-  } else {
-    result.textContent = "❌ Code incorrect. Réessayez.";
-    result.className = "error";
-  }
+<style>
+body {
+  background:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url("https://source.unsplash.com/1200x1200/?tokyo"),
+    url("https://source.unsplash.com/1200x1200/?mount+fuji"),
+    url("https://source.unsplash.com/1200x1200/?kyoto"),
+    url("https://source.unsplash.com/1200x1200/?miyajima,torii"),
+    url("https://source.unsplash.com/1200x1200/?nagoya,maglev,museum"),
+    url("https://source.unsplash.com/1200x1200/?tokyo,disneysea"),
+    url("https://source.unsplash.com/1200x1200/?sapporo"),
+    url("https://source.unsplash.com/1200x1200/?otaru,canal"),
+    url("https://source.unsplash.com/1200x1200/?lake+toya");
+  background-size: 33.333% 33.333%;
+  background-position:
+    0% 0%, 33.333% 0%, 66.666% 0%,
+    0% 33.333%, 33.333% 33.333%, 66.666% 33.333%,
+    0% 66.666%, 33.333% 66.666%, 66.666% 66.666%;
 }
-</script>
+</style>
 
+</head>
+<body>
+  <div class="container">
+    <h1>🎌 Bravo</h1>
+    <p>Vous êtes arrivés à l’avant-dernière étape du jeu.</p>
+    <p>Entrez le code secret pour continuer.</p>
+  </div>
 </body>
 </html>
