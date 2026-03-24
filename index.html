@@ -61,7 +61,7 @@ body::after {
 }
 
 .panel {
-  width: min(520px, 92vw);
+  width: min(720px, 92vw);
   background: rgba(0,0,0,0.28);
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 14px;
@@ -114,29 +114,45 @@ button {
 
 .success { color: #4caf50; }
 .error { color: #ff5252; }
+
+.hidden { display: none; }
+
+.success-page {
+  padding: 20px 18px;
+  font-size: 18px;
+  line-height: 1.35;
+}
 </style>
 </head>
 <body>
 <div class="fg"><img src="assets/bg/mosaic_5x5_maxsquare.jpg" alt=""></div>
 <div class="ui">
   <div class="panel">
-    <div class="lock">
-      <div class="wheel">0</div>
-      <div class="wheel">0</div>
-      <div class="wheel">0</div>
-      <div class="wheel">0</div>
-      <div class="wheel">0</div>
+
+    <div id="codeScreen">
+      <div class="lock">
+        <div class="wheel">0</div>
+        <div class="wheel">0</div>
+        <div class="wheel">0</div>
+        <div class="wheel">0</div>
+        <div class="wheel">0</div>
+      </div>
+      <div class="actions">
+        <button id="validate">Valider</button>
+      </div>
+      <div id="result"></div>
     </div>
-    <div class="actions">
-      <button id="validate">Valider</button>
-    </div>
-    <div id="result"></div>
+
+    <div id="successScreen" class="hidden success-page">Bravo Robin et Mathis, vous avez parfaitement réalisé la mission Japon ! Vous avez mérité tous les deux de choisir une récompense dans la liste suivante</div>
+
   </div>
 </div>
 <script>
 const CODE = "12345";
 const wheels = Array.from(document.querySelectorAll('.wheel'));
 const result = document.getElementById('result');
+const codeScreen = document.getElementById('codeScreen');
+const successScreen = document.getElementById('successScreen');
 
 function getValue() {
   return wheels.map(w => w.textContent).join('');
@@ -147,13 +163,22 @@ function clearResult() {
   result.className = "";
 }
 
-function show(ok) {
-  result.textContent = ok ? "Code correct" : "Code incorrect";
-  result.className = ok ? "success" : "error";
+function showError() {
+  result.textContent = "Code incorrect";
+  result.className = "error";
+}
+
+function showSuccessPage() {
+  codeScreen.classList.add('hidden');
+  successScreen.classList.remove('hidden');
 }
 
 function validate() {
-  show(getValue() === CODE);
+  if (getValue() === CODE) {
+    showSuccessPage();
+  } else {
+    showError();
+  }
 }
 
 wheels.forEach(w => {
