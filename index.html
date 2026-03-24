@@ -5,13 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jeu – Étape</title>
 <style>
-html, body {
-  height: 100%;
-  margin: 0;
-}
-:root {
-  --bgimg: url("assets/bg/mosaic_3x3_maxsquare.jpg");
-}
+html, body { height: 100%; margin: 0; }
+:root { --bgimg: url("assets/bg/mosaic_4x4_maxsquare.jpg"); }
+
 body {
   position: relative;
   overflow: hidden;
@@ -19,6 +15,7 @@ body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: #fff;
 }
+
 body::before {
   content: "";
   position: fixed;
@@ -27,36 +24,34 @@ body::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: blur(18px) grayscale(70%) brightness(0.70);
-  transform: scale(1.08);
+  filter: blur(10px) grayscale(55%) brightness(0.72);
+  transform: scale(1.04);
   z-index: -2;
 }
+
 body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.18);
   z-index: -1;
 }
+
 .fg {
   position: fixed;
   inset: 0;
-  display: grid;
-  place-items: center;
   pointer-events: none;
   z-index: 0;
-  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
-           max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
 }
+
 .fg img {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   object-fit: contain;
   object-position: center;
-  max-width: 92vw;
-  max-height: 92vh;
-  filter: saturate(0.98) contrast(1.02);
+  display: block;
 }
+
 .ui {
   position: relative;
   min-height: 100%;
@@ -66,27 +61,22 @@ body::after {
   padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
            max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
 }
+
 .panel {
   width: min(520px, 92vw);
   max-height: 92vh;
   overflow: auto;
-  background: rgba(0,0,0,0.72);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: 18px;
   padding: 22px 20px;
   text-align: center;
+  backdrop-filter: blur(6px);
 }
-h1 {
-  margin: 0 0 10px 0;
-  font-size: 22px;
-  font-weight: 700;
-}
-.p {
-  margin: 6px 0;
-  font-size: 14px;
-  opacity: 0.92;
-  line-height: 1.35;
-}
+
+h1 { margin: 0 0 10px 0; font-size: 22px; font-weight: 700; }
+.p { margin: 6px 0; font-size: 14px; opacity: 0.92; line-height: 1.35; }
+
 .lock {
   display: flex;
   justify-content: center;
@@ -94,17 +84,19 @@ h1 {
   flex-wrap: wrap;
   margin: 16px 0 12px 0;
 }
+
 .wheel {
   width: clamp(44px, 12vw, 54px);
   height: clamp(64px, 16vw, 78px);
   border-radius: 12px;
   border: 2px solid rgba(255,255,255,0.20);
-  background: rgba(10,10,10,0.75);
+  background: rgba(10,10,10,0.65);
   font-size: clamp(26px, 7vw, 34px);
   line-height: clamp(64px, 16vw, 78px);
   user-select: none;
   cursor: pointer;
 }
+
 .actions {
   display: flex;
   gap: 10px;
@@ -112,6 +104,7 @@ h1 {
   flex-wrap: wrap;
   margin-top: 8px;
 }
+
 button {
   border: 0;
   border-radius: 10px;
@@ -119,37 +112,20 @@ button {
   font-size: 14px;
   cursor: pointer;
 }
-.primary {
-  background: #c62828;
-  color: #fff;
-}
-.secondary {
-  background: rgba(255,255,255,0.10);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.18);
-}
-#result {
-  margin-top: 12px;
-  font-weight: 700;
-}
+
+.primary { background: #c62828; color: #fff; }
+.secondary { background: rgba(255,255,255,0.10); color: #fff; border: 1px solid rgba(255,255,255,0.18); }
+
+#result { margin-top: 12px; font-weight: 700; min-height: 1.2em; }
 .success { color: #4caf50; }
 .error { color: #ff5252; }
-.hint {
-  margin-top: 10px;
-  font-size: 12px;
-  opacity: 0.75;
-}
-.hidden-input {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
+.hint { margin-top: 10px; font-size: 12px; opacity: 0.75; }
+
+.hidden-input { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 </style>
 </head>
 <body>
-<div class="fg"><img src="assets/bg/mosaic_3x3_maxsquare.jpg" alt=""></div>
+<div class="fg"><img src="assets/bg/mosaic_4x4_maxsquare.jpg" alt=""></div>
 <div class="ui">
   <div class="panel">
     <h1>Bravo</h1>
@@ -190,6 +166,11 @@ function setValue(s) {
   for (let i=0;i<5;i++) wheels[i].textContent = v[i];
 }
 
+function clearResult() {
+  result.textContent = "";
+  result.className = "";
+}
+
 function show(ok) {
   result.textContent = ok ? "Code correct" : "Code incorrect";
   result.className = ok ? "success" : "error";
@@ -203,14 +184,14 @@ wheels.forEach(w => {
   w.addEventListener('click', () => {
     const v = (parseInt(w.textContent,10) + 1) % 10;
     w.textContent = String(v);
-    validate();
+    clearResult();
   });
   w.addEventListener('wheel', e => {
     e.preventDefault();
     const cur = parseInt(w.textContent,10);
     const v = (cur + (e.deltaY < 0 ? 1 : 9)) % 10;
     w.textContent = String(v);
-    validate();
+    clearResult();
   }, { passive: false });
 });
 
@@ -218,15 +199,14 @@ document.getElementById('validate').addEventListener('click', validate);
 
 document.getElementById('reset').addEventListener('click', () => {
   setValue('00000');
-  result.textContent = "";
-  result.className = "";
+  clearResult();
 });
 
 document.getElementById('lock').addEventListener('click', () => kbd.focus());
 
 kbd.addEventListener('input', () => {
   setValue(kbd.value);
-  validate();
+  clearResult();
 });
 </script>
 </body>
