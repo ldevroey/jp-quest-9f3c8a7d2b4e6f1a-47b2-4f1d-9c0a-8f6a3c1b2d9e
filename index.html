@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jeu – Étape</title>
+<title>Jeu – Code</title>
 <style>
 html, body { height: 100%; margin: 0; }
-:root { --bgimg: url("assets/bg/mosaic_4x4_maxsquare.jpg"); }
+:root { --bgimg: url("assets/bg/mosaic_5x5_maxsquare.jpg"); }
 
 body {
   position: relative;
@@ -53,8 +53,8 @@ body::after {
 }
 
 .ui {
-  position: relative;
-  min-height: 100%;
+  position: fixed;
+  inset: 0;
   display: grid;
   place-items: center;
   z-index: 1;
@@ -64,25 +64,19 @@ body::after {
 
 .panel {
   width: min(520px, 92vw);
-  max-height: 92vh;
-  overflow: auto;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.35);
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: 18px;
-  padding: 22px 20px;
+  padding: 14px 14px;
   text-align: center;
   backdrop-filter: blur(6px);
 }
-
-h1 { margin: 0 0 10px 0; font-size: 22px; font-weight: 700; }
-.p { margin: 6px 0; font-size: 14px; opacity: 0.92; line-height: 1.35; }
 
 .lock {
   display: flex;
   justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin: 16px 0 12px 0;
 }
 
 .wheel {
@@ -90,7 +84,7 @@ h1 { margin: 0 0 10px 0; font-size: 22px; font-weight: 700; }
   height: clamp(64px, 16vw, 78px);
   border-radius: 12px;
   border: 2px solid rgba(255,255,255,0.20);
-  background: rgba(10,10,10,0.65);
+  background: rgba(10,10,10,0.55);
   font-size: clamp(26px, 7vw, 34px);
   line-height: clamp(64px, 16vw, 78px);
   user-select: none;
@@ -98,11 +92,9 @@ h1 { margin: 0 0 10px 0; font-size: 22px; font-weight: 700; }
 }
 
 .actions {
+  margin-top: 10px;
   display: flex;
-  gap: 10px;
   justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 8px;
 }
 
 button {
@@ -111,59 +103,44 @@ button {
   padding: 10px 14px;
   font-size: 14px;
   cursor: pointer;
+  background: #c62828;
+  color: #fff;
 }
 
-.primary { background: #c62828; color: #fff; }
-.secondary { background: rgba(255,255,255,0.10); color: #fff; border: 1px solid rgba(255,255,255,0.18); }
+#result {
+  margin-top: 10px;
+  font-weight: 700;
+  min-height: 1.2em;
+}
 
-#result { margin-top: 12px; font-weight: 700; min-height: 1.2em; }
 .success { color: #4caf50; }
 .error { color: #ff5252; }
-.hint { margin-top: 10px; font-size: 12px; opacity: 0.75; }
-
-.hidden-input { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 </style>
 </head>
 <body>
-<div class="fg"><img src="assets/bg/mosaic_4x4_maxsquare.jpg" alt=""></div>
+<div class="fg"><img src="assets/bg/mosaic_5x5_maxsquare.jpg" alt=""></div>
 <div class="ui">
   <div class="panel">
-    <h1>Bravo</h1>
-    <div class="p">Vous êtes arrivés à l’avant-dernière étape du jeu</div>
-    <div class="p">Entrez le code secret pour continuer</div>
-
-    <input class="hidden-input" id="kbd" inputmode="numeric" pattern="[0-9]*" maxlength="5" autocomplete="one-time-code">
-
-    <div class="lock" id="lock">
+    <div class="lock">
       <div class="wheel">0</div>
       <div class="wheel">0</div>
       <div class="wheel">0</div>
       <div class="wheel">0</div>
       <div class="wheel">0</div>
     </div>
-
     <div class="actions">
-      <button class="primary" id="validate">Valider</button>
-      <button class="secondary" id="reset">Réinitialiser</button>
+      <button id="validate">Valider</button>
     </div>
-
     <div id="result"></div>
-    <div class="hint">Cliquer sur une roue pour incrémenter. Molette pour décrémenter. Saisie clavier possible.</div>
   </div>
 </div>
 <script>
 const CODE = "12345";
 const wheels = Array.from(document.querySelectorAll('.wheel'));
 const result = document.getElementById('result');
-const kbd = document.getElementById('kbd');
 
 function getValue() {
   return wheels.map(w => w.textContent).join('');
-}
-
-function setValue(s) {
-  const v = (s || "").replace(/\D/g,'').slice(0,5).padEnd(5,'0');
-  for (let i=0;i<5;i++) wheels[i].textContent = v[i];
 }
 
 function clearResult() {
@@ -196,18 +173,6 @@ wheels.forEach(w => {
 });
 
 document.getElementById('validate').addEventListener('click', validate);
-
-document.getElementById('reset').addEventListener('click', () => {
-  setValue('00000');
-  clearResult();
-});
-
-document.getElementById('lock').addEventListener('click', () => kbd.focus());
-
-kbd.addEventListener('input', () => {
-  setValue(kbd.value);
-  clearResult();
-});
 </script>
 </body>
 </html>
